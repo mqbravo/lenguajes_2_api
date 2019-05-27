@@ -13,3 +13,6 @@ buscarIngrediente(Ingrediente, X):-receta(R,_,_,Lista,_),aux(Lista, Ingrediente,
 aux([],Elemento,Temp,X):-fail.
 aux([H|T],Elemento,Temp,X):-H==Elemento,X=Temp.
 aux([H|T],Elemento,Temp,X):-aux(T,Elemento,Temp,X).
+
+
+receta('Pacha con vainilla','Bebida',['1. Agregar Pacha','2 Agregar Vainilla','3. Combinar'],['Pacha','Vainilla'],['http']).

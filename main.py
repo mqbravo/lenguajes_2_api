@@ -22,6 +22,7 @@ def setReceta():
     ingredientes = request.args['ingredientes']
     imagenes = request.args['urls']
     recetas.addReceta(nombre, tipo, instrucciones, ingredientes, imagenes, prolog)
+    prolog.consult("recetas.pl")
     return jsonify(True)
 
 @app.route('/api/recetas/all', methods=['GET'])
