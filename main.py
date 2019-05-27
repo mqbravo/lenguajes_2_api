@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from pyswip import Prolog
 import ManagerRecetas as recetas
+import json
 
 app = Flask(__name__)
 PORT = 5000
@@ -26,10 +27,52 @@ def setReceta():
 @app.route('/api/recetas/all', methods=['GET'])
 def getRecetas():
     results = []
-    query = "receta(X,_,_,_,_)"
+    query = "receta(X,Y,Z,W,K)"
     resultado = list(prolog.query(query))
+
+    recipes = []
     for r in resultado:
-        results.append(r['X'])
+        recipe = []
+        name = {'name' : r['X'] }
+        type = {'type' : r['Y'] }
+        stringInstructions = ''.join(str(e) for e in r['Z'])
+        stringIngredients = ''.join(str(e) for e in r['W'])
+        stringImages = ''.join(str(e) for e in r['K'])
+
+        instructions = []
+        instruction = ""
+        for l in stringInstructions:
+            if(l == "1" or l == "2" or l == "3" or l == "4" or l == "5" or l == "6" or l == "7" or l == "8" or l == "9" ):
+                if(instruction == ""):
+                    instruction += l
+                else:
+                    instructions.append(instruction)
+                    instruction = l
+            else:
+                instruction += l
+        instructions.append(instruction)
+
+        ingredients = []
+        ingredient = ""
+        for l in stringIngredients:
+            if(l == l.upper()):
+                if(ingredient == ""):
+                    ingredient += l
+                else:
+                    ingredients.append(ingredient)
+                    ingredient = l
+            else:
+                ingredient += l
+        ingredients.append(ingredient)
+
+        recipe.append(name)
+        recipe.append(type)
+        recipe.append({'instructions':instructions})
+        recipe.append({'ingredients':ingredients})
+        #recipe.append({'images':images})
+        recipes.append({ 'recipe':recipe })
+
+    results = { 'recipes' : recipes }
 
     return jsonify(results)
 
