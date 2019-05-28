@@ -40,18 +40,18 @@ def getRecetas():
         stringIngredients = ''.join(str(e) for e in r['W'])
         stringImages = ''.join(str(e) for e in r['K'])
 
-        instructions = []
-        instruction = ""
-        for l in stringInstructions:
-            if(l == "1" or l == "2" or l == "3" or l == "4" or l == "5" or l == "6" or l == "7" or l == "8" or l == "9" ):
-                if(instruction == ""):
-                    instruction += l
-                else:
-                    instructions.append(instruction)
-                    instruction = l
-            else:
-                instruction += l
-        instructions.append(instruction)
+        # instructions = []
+        # instruction = ""
+        # for l in stringInstructions:
+        #     if(l == "1" or l == "2" or l == "3" or l == "4" or l == "5" or l == "6" or l == "7" or l == "8" or l == "9" ):
+        #         if(instruction == ""):
+        #             instruction += l
+        #         else:
+        #             instructions.append(instruction)
+        #             instruction = l
+        #     else:
+        #         instruction += l
+        # instructions.append(instruction)
 
         ingredients = []
         ingredient = ""
@@ -68,7 +68,7 @@ def getRecetas():
 
         recipe.append(name)
         recipe.append(type)
-        recipe.append({'instructions':instructions})
+        recipe.append({'instructions':stringInstructions})
         recipe.append({'ingredients':ingredients})
         #recipe.append({'images':images})
         recipes.append({ 'recipe':recipe })
