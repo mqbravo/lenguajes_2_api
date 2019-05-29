@@ -1,29 +1,30 @@
 def addReceta(nombre, tipo, listaInstrucciones, listaIngredientes, listaImagenes, prolog):
     file = open("recetas.pl", 'a')
 
-    auxIngredientes = "['"
-    for ingrediente in listaIngredientes:
-        if(ingrediente == ","):
-            auxIngredientes += "'" + ingrediente + "'"
-        else:
-            auxIngredientes += ingrediente
-    auxIngredientes += "']"
+    ingredientes = "["
+    for ingrediente in listaIngredientes['ingredients']:
+        ingredientes += "'" + ingrediente + "',"
+    ingredientes = ingredientes[:-1] + "]"
 
-    auxImagenes = "['"
-    for url in listaImagenes:
-        if(url == ","):
-            auxImagenes += "'" + url + "'"
-        else:
-            auxImagenes += url
-    auxImagenes += "']"
+    imagenes = "["
+    for url in listaImagenes['imageURLs']:
+        imagenes += "'" + url + "',"
+    imagenes = imagenes[:-1] + "]"
 
-    auxInstrucciones = "['"
-    for instruccion in listaInstrucciones:
-        if(instruccion == ","):
-            auxInstrucciones += "'" + instruccion + "'"
-        else:
-            auxInstrucciones += instruccion
-    auxInstrucciones += "']"
+    instrucciones = "["
+    for instruccion in listaInstrucciones['preparation']:
+        instrucciones += "'" + instruccion + "',"
+    instrucciones = instrucciones[:-1] + "]"
 
-    file.write("\nreceta('"+ nombre + "','" + tipo + "'," + auxInstrucciones + "," + auxIngredientes + "," + auxImagenes + ").")
+    file.write("\nreceta('"+
+                nombre['name'] +
+                 "','" +
+                tipo['type'] +
+                "'," +
+                instrucciones +
+                "," +
+                ingredientes +
+                "," +
+                imagenes +
+                ").")
     file.close()

@@ -14,13 +14,14 @@ prolog.consult("recetas.pl")
 def home():
     return '''<h3>Prueba Api Lenguajes de Programacion</h3>'''
 
-@app.route('/api/recetas/set', methods=['GET'])
+@app.route('/api/recetas', methods=['POST'])
 def setReceta():
-    nombre = request.args['nombre']
-    instrucciones = request.args['instrucciones']
-    tipo = request.args['tipo']
-    ingredientes = request.args['ingredientes']
-    imagenes = request.args['urls']
+    receta = request.json['recipe']
+    nombre = receta[0]
+    tipo = receta[1]
+    instrucciones = receta[2]
+    ingredientes = receta[3]
+    imagenes = receta[4]
     recetas.addReceta(nombre, tipo, instrucciones, ingredientes, imagenes, prolog)
     prolog.consult("recetas.pl")
     return jsonify(True)
@@ -40,37 +41,33 @@ def getRecetas():
         stringIngredients = ''.join(str(e) for e in r['W'])
         stringImages = ''.join(str(e) for e in r['K'])
 
-        # instructions = []
-        # instruction = ""
-        # for l in stringInstructions:
-        #     if(l == "1" or l == "2" or l == "3" or l == "4" or l == "5" or l == "6" or l == "7" or l == "8" or l == "9" ):
-        #         if(instruction == ""):
-        #             instruction += l
-        #         else:
-        #             instructions.append(instruction)
-        #             instruction = l
-        #     else:
-        #         instruction += l
-        # instructions.append(instruction)
-
         ingredients = []
         ingredient = ""
         for l in stringIngredients:
-            if(l == l.upper()):
-                if(ingredient == ""):
-                    ingredient += l
-                else:
+            if(l == "|"):
+                if(ingredient != ""):
                     ingredients.append(ingredient)
-                    ingredient = l
+                    ingredient = ""
             else:
                 ingredient += l
         ingredients.append(ingredient)
 
+        images = []
+        url = ""
+        for l in stringImages:
+            if(l == "|"):
+                if(url != ""):
+                    images.append(url)
+                    url = ""
+            else:
+                url += l
+        images.append(url)
+
         recipe.append(name)
         recipe.append(type)
-        recipe.append({'instructions':stringInstructions})
+        recipe.append({'preparation':stringInstructions})
         recipe.append({'ingredients':ingredients})
-        #recipe.append({'images':images})
+        recipe.append({'imageURLs':images})
         recipes.append({ 'recipe':recipe })
 
     results = { 'recipes' : recipes }
