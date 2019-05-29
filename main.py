@@ -34,9 +34,8 @@ def getRecetas():
 
     recipes = []
     for r in resultado:
-        recipe = []
-        name = {'name' : r['X'] }
-        type = {'type' : r['Y'] }
+        name = r['X']
+        type = r['Y']
         stringInstructions = ''.join(str(e) for e in r['Z'])
         stringIngredients = ''.join(str(e) for e in r['W'])
         stringImages = ''.join(str(e) for e in r['K'])
@@ -63,11 +62,16 @@ def getRecetas():
                 url += l
         images.append(url)
 
-        recipe.append(name)
-        recipe.append(type)
-        recipe.append({'preparation':stringInstructions})
-        recipe.append({'ingredients':ingredients})
-        recipe.append({'imageURLs':images})
+        recipe = {  'name': name,
+                    'type': type,
+                    'preparation': stringInstructions,
+                    'ingredients': ingredients,
+                    'URLs': images }
+        # recipe.append(name)
+        # recipe.append(type)
+        # recipe.append({'preparation':stringInstructions})
+        # recipe.append({'ingredients':ingredients})
+        # recipe.append({'imageURLs':images})
         recipes.append({ 'recipe':recipe })
 
     results = { 'recipes' : recipes }
