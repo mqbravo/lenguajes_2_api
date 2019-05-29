@@ -72,11 +72,9 @@ def getRecetas():
         # recipe.append({'preparation':stringInstructions})
         # recipe.append({'ingredients':ingredients})
         # recipe.append({'imageURLs':images})
-        recipes.append({ 'recipe':recipe })
+        recipes.append({ 'recipes':recipe })
 
-    results = { 'recipes' : recipes }
-
-    return jsonify(results)
+    return jsonify(recipes)
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreReceta():
