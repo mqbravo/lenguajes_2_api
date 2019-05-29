@@ -114,7 +114,7 @@ def nombreIngrediente():
     else:
         return "Error: No se encuentra el tipo a buscar, especifica uno."
 
-    nombreIngrediente = "'" + nombreIngrediente + "'"
+    nombreIngrediente = "'|" + nombreIngrediente + "'"
     query = "buscarIngrediente(" + nombreIngrediente + ",X)"
     for r in prolog.query(query):
         receta = r['X']
