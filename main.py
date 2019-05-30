@@ -74,7 +74,7 @@ def getRecetas():
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreReceta():
-    results = []
+    result = []
     if 'nombreReceta' in request.args:
         nombreReceta = request.args['nombreReceta']
     else:
@@ -83,9 +83,46 @@ def nombreReceta():
     nombreReceta = "'" + nombreReceta + "'"
     query = "buscarNombre(" + nombreReceta + ",X)"
     for r in prolog.query(query):
-        receta = r['X']
-        results.append(receta)
-    return jsonify(results)
+        nombre = r['X']
+
+    auxQuery = "receta('" + nombre + "',Y,Z,W,K)"
+    for r in prolog.query(auxQuery):
+        name = nombre
+        type = r['Y']
+        stringInstructions = ''.join(str(e) for e in r['Z'])
+        stringIngredients = ''.join(str(e) for e in r['W'])
+        stringImages = ''.join(str(e) for e in r['K'])
+
+        ingredients = []
+        ingredient = ""
+        for l in stringIngredients:
+            if(l == "|"):
+                if(ingredient != ""):
+                    ingredients.append(ingredient)
+                    ingredient = ""
+            else:
+                ingredient += l
+        ingredients.append(ingredient)
+
+        images = []
+        url = ""
+        for l in stringImages:
+            if(l == "|"):
+                if(url != ""):
+                    images.append(url)
+                    url = ""
+            else:
+                url += l
+        images.append(url)
+
+        recipe = {  'name': name,
+                    'type': type,
+                    'preparation': stringInstructions,
+                    'ingredients': ingredients,
+                    'URLs': images }
+    result.append(recipe)
+
+    return jsonify({ 'recipe': result })
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreTipo():
@@ -97,10 +134,50 @@ def nombreTipo():
 
     nombreTipo = "'" + nombreTipo + "'"
     query = "buscarTipo(" + nombreTipo + ",X)"
+    listaNombres = []
     for r in prolog.query(query):
-        receta = r['X']
-        results.append(receta)
-    return jsonify(results)
+         listaNombres.append(r['X'])
+
+    for nombre in listaNombres:
+        auxQuery = "receta('" + nombre + "',Y,Z,W,K)"
+        for r in prolog.query(auxQuery):
+            name = nombre
+            type = r['Y']
+            stringInstructions = ''.join(str(e) for e in r['Z'])
+            stringIngredients = ''.join(str(e) for e in r['W'])
+            stringImages = ''.join(str(e) for e in r['K'])
+
+            ingredients = []
+            ingredient = ""
+            for l in stringIngredients:
+                if(l == "|"):
+                    if(ingredient != ""):
+                        ingredients.append(ingredient)
+                        ingredient = ""
+                else:
+                    ingredient += l
+            ingredients.append(ingredient)
+
+            images = []
+            url = ""
+            for l in stringImages:
+                if(l == "|"):
+                    if(url != ""):
+                        images.append(url)
+                        url = ""
+                else:
+                    url += l
+            images.append(url)
+
+            recipe = {  'name': name,
+                        'type': type,
+                        'preparation': stringInstructions,
+                        'ingredients': ingredients,
+                        'URLs': images }
+
+            results.append(recipe)
+
+    return jsonify({ 'recipe': results })
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreIngrediente():
@@ -112,7 +189,47 @@ def nombreIngrediente():
 
     nombreIngrediente = "'|" + nombreIngrediente + "'"
     query = "buscarIngrediente(" + nombreIngrediente + ",X)"
+    listaNombres = []
     for r in prolog.query(query):
-        receta = r['X']
-        results.append(receta)
-    return jsonify(results)
+        listaNombres.append(r['X'])
+
+    for nombre in listaNombres:
+        auxQuery = "receta('" + nombre + "',Y,Z,W,K)"
+        for r in prolog.query(auxQuery):
+            name = nombre
+            type = r['Y']
+            stringInstructions = ''.join(str(e) for e in r['Z'])
+            stringIngredients = ''.join(str(e) for e in r['W'])
+            stringImages = ''.join(str(e) for e in r['K'])
+
+            ingredients = []
+            ingredient = ""
+            for l in stringIngredients:
+                if(l == "|"):
+                    if(ingredient != ""):
+                        ingredients.append(ingredient)
+                        ingredient = ""
+                else:
+                    ingredient += l
+            ingredients.append(ingredient)
+
+            images = []
+            url = ""
+            for l in stringImages:
+                if(l == "|"):
+                    if(url != ""):
+                        images.append(url)
+                        url = ""
+                else:
+                    url += l
+            images.append(url)
+
+            recipe = {  'name': name,
+                        'type': type,
+                        'preparation': stringInstructions,
+                        'ingredients': ingredients,
+                        'URLs': images }
+
+            results.append(recipe)
+
+    return jsonify({ 'recipe': results })
