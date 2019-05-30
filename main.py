@@ -122,7 +122,7 @@ def nombreReceta():
                     'URLs': images }
     result.append(recipe)
 
-    return jsonify({ 'recipe': result })
+    return jsonify({ 'recipes': result })
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreTipo():
@@ -177,7 +177,7 @@ def nombreTipo():
 
             results.append(recipe)
 
-    return jsonify({ 'recipe': results })
+    return jsonify({ 'recipes': results })
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreIngrediente():
@@ -232,4 +232,4 @@ def nombreIngrediente():
 
             results.append(recipe)
 
-    return jsonify({ 'recipe': results })
+    return jsonify({ 'recipes': results })
