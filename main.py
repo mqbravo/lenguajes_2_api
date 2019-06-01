@@ -2,6 +2,9 @@ from flask import Flask, jsonify, request
 from pyswip import Prolog
 import ManagerRecetas as recetas
 import json
+import psycopg2 #PostgreSQL lib
+import random
+import string
 
 app = Flask(__name__)
 PORT = 5000
@@ -233,3 +236,113 @@ def nombreIngrediente():
             results.append(recipe)
 
     return jsonify({ 'recipes': results })
+
+#Login
+@app.route('/login',methods=['POST','GET'])
+def login():
+
+	if request.method == 'POST':
+        #Database connection credentials
+        dbConnection = psycopg2.connect(
+            host = 'ec2-23-21-91-183.compute-1.amazonaws.com',
+            database = 'd4p1vjd3bc3tvv',
+            user = 'enagxtinofjzfe',
+            password = '9503c71e6865bfb9f9d4428548a03d81d8f26eb37a8d07a1c76a45adae1ea300'
+        )
+        username = request.json['username']
+        password = request.json['password']
+
+        cur = dbConnection.cursor()
+
+        print('QUERY:'+"SELECT splogin FROM spLogin('"+username+"','"+password+"');")
+        
+        cur.execute("SELECT splogin FROM spLogin('"+username+"','"+password+"');")
+
+        queryResponse = cur.fetchone()
+
+        cur.close()
+        
+        print(queryResponse[0])
+        if queryResponse[0] == True:
+            print('Credenciales correctos para '+username)
+            print('Generating authentication token...')
+            authToken = generateToken()
+
+            #bloque para la actualizacion del token en la base de datos despues de ser generada
+
+            anotherCursor = dbConnection.cursor()
+
+            print('QUERY:'+"SELECT spsetauthtoken FROM spSetAuthToken('"+username+"','"+authToken+"')")
+
+            anotherCursor.execute("SELECT spsetauthtoken FROM spSetAuthToken('"+username+"','"+authToken+"')")
+
+
+            respuestaSetAuthTokenProcedure = anotherCursor.fetchone()#variable booleano que dice si la actualizacion del token fue exitosa o no
+
+            anotherCursor.close()
+            dbConnection.commit()
+            dbConnection.close()
+
+            #fin del bloque
+
+            if (respuestaSetAuthTokenProcedure[0] == True):
+                print('spSetAuthTokenProcedure:'+str(respuestaSetAuthTokenProcedure[0]))
+                return jsonify(token=authToken)
+            else:
+                return jsonify(token='')
+
+        else:
+            print('Credenciales incorrectos')
+            dbConnection.close()
+            return jsonify(token = '')
+    else:
+        dbConnection.close()
+        return jsonify(token = '')
+
+
+def generateToken():
+
+    letters = string.ascii_lowercase
+
+    authToken = ""
+
+    return authToken.join(random.choice(letters) for i in range(0,10))
+
+@app.route('/register',methods=['POST'])
+def register():
+    #Database connection credentials
+        dbConnection = psycopg2.connect(
+            host = 'ec2-23-21-91-183.compute-1.amazonaws.com',
+            database = 'd4p1vjd3bc3tvv',
+            user = 'enagxtinofjzfe',
+            password = '9503c71e6865bfb9f9d4428548a03d81d8f26eb37a8d07a1c76a45adae1ea300'
+        )
+
+        name = request.json['name']
+        email = request.json['email']
+        username = request.json['username']
+        password = request.json['password']
+
+        cur = dbConnection.cursor()
+
+        inputTuple = name+"','"+email+"','"+username+"','"+password
+
+        print("QUERY: "+"SELECT spnewuser FROM spNewUser('"+inputTuple+"')")
+
+
+        cur.execute("SELECT spnewuser FROM spNewUser('"+inputTuple+"')")
+
+        response = cur.fetchone()
+
+        cur.close()
+        dbConnection.commit()
+        dbConnection.close()
+
+        print("spNewUser: "+str(response[0]))
+        if (response[0]==True):
+
+            return jsonify(response=True)
+
+        else:
+
+            return jsonify(response=False)
