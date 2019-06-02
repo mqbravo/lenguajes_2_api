@@ -13,6 +13,8 @@ DEBUG = True
 prolog = Prolog
 prolog.consult("recetas.pl")
 
+results = []
+
 @app.route('/', methods=['GET'])
 def home():
     return '''<h3>Prueba Api Lenguajes de Programacion</h3>'''
