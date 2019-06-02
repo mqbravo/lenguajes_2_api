@@ -238,7 +238,7 @@ def nombreIngrediente():
     return jsonify({ 'recipes': results })
 
 #Login
-@app.route('/api/login',methods=['POST','GET'])
+@app.route('/login',methods=['POST','GET'])
 def login():
 
 	if request.method == 'POST':
@@ -312,7 +312,7 @@ def getConnection():
             password = '9503c71e6865bfb9f9d4428548a03d81d8f26eb37a8d07a1c76a45adae1ea300'
         )
 
-@app.route('/api/register',methods=['POST'])
+@app.route('/register',methods=['POST'])
 def register():
     #Database connection credentials
         dbConnection = getConnection()
