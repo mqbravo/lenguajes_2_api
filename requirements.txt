@@ -6,3 +6,4 @@ Jinja2==2.10.1
 MarkupSafe==1.1.1
 pyswip==0.2.8
 Werkzeug==0.15.4
+psycopg2==2.8.2
