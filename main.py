@@ -296,24 +296,6 @@ def login():
         dbConnection.close()
         return jsonify(token = '')
 
-
-def generateToken():
-
-    letters = string.ascii_lowercase
-
-    authToken = ""
-
-    return authToken.join(random.choice(letters) for i in range(0,10))
-
-
-def getConnection():
-    return psycopg2.connect(
-            host = 'ec2-23-21-91-183.compute-1.amazonaws.com',
-            database = 'd4p1vjd3bc3tvv',
-            user = 'enagxtinofjzfe',
-            password = '9503c71e6865bfb9f9d4428548a03d81d8f26eb37a8d07a1c76a45adae1ea300'
-        )
-
 @app.route('/register',methods=['POST'])
 def register():
     #Database connection credentials
@@ -347,3 +329,42 @@ def register():
         else:
 
             return jsonify(response=False)
+
+
+#Utility functions
+
+def generateToken():
+
+    letters = string.ascii_lowercase
+
+    authToken = ""
+
+    return authToken.join(random.choice(letters) for i in range(0,10))
+
+
+def getConnection():
+    return psycopg2.connect(
+            host = 'ec2-23-21-91-183.compute-1.amazonaws.com',
+            database = 'd4p1vjd3bc3tvv',
+            user = 'enagxtinofjzfe',
+            password = '9503c71e6865bfb9f9d4428548a03d81d8f26eb37a8d07a1c76a45adae1ea300'
+        )
+
+def validToken(username,token):
+    
+    dbConnection = getConnection()
+
+    cur = dbConnection.cursor()
+
+    inputTuple = usernane +"','"+token
+
+    print("QUERY: "+"SELECT spmatchtokens FROM spMatchTokens('"+input+"')")
+
+    cur.execute("SELECT spmatchtokens FROM spMatchTokens('"+input+"')")
+
+    result = cur.fetchone()
+
+    print("spMatchTokens: "+str(result[0]))
+
+    return result[0]
+
