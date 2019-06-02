@@ -243,7 +243,7 @@ def nombreIngrediente():
 @app.route('/login',methods=['POST','GET'])
 def login():
 
-	if request.method == 'POST':
+    if request.method == 'POST':
         #Database connection credentials
         dbConnection = getConnection()
         username = request.json['username']
