@@ -363,7 +363,8 @@ def validToken(username,token):
     cur.execute("SELECT spmatchtokens FROM spMatchTokens('"+input+"')")
 
     result = cur.fetchone()
-
+    cur.close()
+    dbConnection.close()
     print("spMatchTokens: "+str(result[0]))
 
     return result[0]
