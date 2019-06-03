@@ -6,6 +6,9 @@ import psycopg2 #PostgreSQL lib
 import random
 import string
 
+#Flask Api: https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask
+#GET and POST examples: https://medium.com/@ashiqgiga07/deploying-rest-api-based-flask-app-on-heroku-part-2-54698cf7c96d
+
 app = Flask(__name__)
 PORT = 5000
 DEBUG = True
@@ -27,12 +30,26 @@ def setReceta():
     instrucciones = receta[2]
     ingredientes = receta[3]
     imagenes = receta[4]
+    usuario = receta[5]
+    token = receta[6]
+
+    if(validToken(usuario, token) == false){
+        return jsonify({ 'results': False })
+    }
+
     recetas.addReceta(nombre, tipo, instrucciones, ingredientes, imagenes, prolog)
     prolog.consult("recetas.pl")
-    return jsonify(True)
+    return jsonify({ 'results': True })
 
 @app.route('/api/recetas/all', methods=['GET'])
 def getRecetas():
+    usuario = request.args['username']
+    token = request.args['token']
+
+    if(validToken(usuario, token) == false){
+        return jsonify({ 'results': False })
+    }
+
     results = []
     query = "receta(X,Y,Z,W,K)"
     resultado = list(prolog.query(query))
@@ -79,6 +96,13 @@ def getRecetas():
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreReceta():
+    usuario = request.args['username']
+    token = request.args['token']
+
+    if(validToken(usuario, token) == false){
+        return jsonify({ 'results': False })
+    }
+
     result = []
     if 'nombreReceta' in request.args:
         nombreReceta = request.args['nombreReceta']
@@ -131,6 +155,13 @@ def nombreReceta():
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreTipo():
+    usuario = request.args['username']
+    token = request.args['token']
+
+    if(validToken(usuario, token) == false){
+        return jsonify({ 'results': False })
+    }
+
     results = []
     if 'nombreTipo' in request.args:
         nombreTipo = request.args['nombreTipo']
@@ -186,6 +217,13 @@ def nombreTipo():
 
 @app.route('/api/recetas', methods=['GET'])
 def nombreIngrediente():
+    usuario = request.args['username']
+    token = request.args['token']
+
+    if(validToken(usuario, token) == false){
+        return jsonify({ 'results': False })
+    }
+
     results = []
     if 'nombreIngrediente' in request.args:
         nombreIngrediente = request.args['nombreIngrediente']
@@ -252,13 +290,13 @@ def login():
         cur = dbConnection.cursor()
 
         print('QUERY:'+"SELECT splogin FROM spLogin('"+username+"','"+password+"');")
-        
+
         cur.execute("SELECT splogin FROM spLogin('"+username+"','"+password+"');")
 
         queryResponse = cur.fetchone()
 
         cur.close()
-        
+
         print(queryResponse[0])
         if queryResponse[0] == True:
             print('Credenciales correctos para '+username)
@@ -351,7 +389,7 @@ def getConnection():
         )
 
 def validToken(username,token):
-    
+
     dbConnection = getConnection()
 
     cur = dbConnection.cursor()
@@ -367,4 +405,3 @@ def validToken(username,token):
     print("spMatchTokens: "+str(result[0]))
 
     return result[0]
-
