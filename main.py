@@ -396,9 +396,9 @@ def validToken(username,token):
 
     inputTuple = username +"','"+token
 
-    print("QUERY: "+"SELECT user FROM spMatchTokens('"+input+"')")
+    print("QUERY: "+"SELECT user FROM spMatchTokens('"+inputTuple+"')")
 
-    cur.execute("SELECT spmatchtokens FROM spMatchTokens('"+input+"')")
+    cur.execute("SELECT spmatchtokens FROM spMatchTokens('"+inputTuple+"')")
 
     result = cur.fetchone()
 
