@@ -33,9 +33,9 @@ def setReceta():
     usuario = receta[5]
     token = receta[6]
 
-    if(validToken(usuario, token) == false){
+    if(validToken(usuario, token) == false):
         return jsonify({ 'results': False })
-    }
+    
 
     recetas.addReceta(nombre, tipo, instrucciones, ingredientes, imagenes, prolog)
     prolog.consult("recetas.pl")
@@ -46,9 +46,9 @@ def getRecetas():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false){
+    if(validToken(usuario, token) == false):
         return jsonify({ 'results': False })
-    }
+    
 
     results = []
     query = "receta(X,Y,Z,W,K)"
@@ -99,9 +99,9 @@ def nombreReceta():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false){
+    if(validToken(usuario, token) == false):
         return jsonify({ 'results': False })
-    }
+    
 
     result = []
     if 'nombreReceta' in request.args:
@@ -158,9 +158,9 @@ def nombreTipo():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false){
+    if(validToken(usuario, token) == false):
         return jsonify({ 'results': False })
-    }
+    
 
     results = []
     if 'nombreTipo' in request.args:
@@ -220,9 +220,9 @@ def nombreIngrediente():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false){
+    if(validToken(usuario, token) == false):
         return jsonify({ 'results': False })
-    }
+    
 
     results = []
     if 'nombreIngrediente' in request.args:
