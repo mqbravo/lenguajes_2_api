@@ -99,7 +99,7 @@ def nombreReceta():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false):
+    if(validToken(usuario, token) == False):
         return jsonify({ 'results': False })
     
 
@@ -158,7 +158,7 @@ def nombreTipo():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false):
+    if(validToken(usuario, token) == False):
         return jsonify({ 'results': False })
     
 
@@ -220,7 +220,7 @@ def nombreIngrediente():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false):
+    if(validToken(usuario, token) == False):
         return jsonify({ 'results': False })
     
 
