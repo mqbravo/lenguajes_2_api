@@ -30,8 +30,8 @@ def setReceta():
     instrucciones = receta[2]
     ingredientes = receta[3]
     imagenes = receta[4]
-    usuario = receta[5]
-    token = receta[6]
+    usuario = request.args['username']
+    token = request.args['token']
 
     if(validToken(usuario, token) == False):
         return jsonify({ 'results': False })
