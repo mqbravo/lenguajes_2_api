@@ -33,7 +33,7 @@ def setReceta():
     usuario = receta[5]
     token = receta[6]
 
-    if(validToken(usuario, token) == false):
+    if(validToken(usuario, token) == False):
         return jsonify({ 'results': False })
     
 
@@ -46,7 +46,7 @@ def getRecetas():
     usuario = request.args['username']
     token = request.args['token']
 
-    if(validToken(usuario, token) == false):
+    if(validToken(usuario, token) == False):
         return jsonify({ 'results': False })
     
 
